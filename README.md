@@ -1,3 +1,32 @@
+# Docker Compose for Home Server
+
+The components of the Home Server running on the Mac-Mini (Ubuntu) is configured by the `docker-compose.yml` file in this repo.
+
+The main component is an nginx reverse proxy which passes commands to a number of applications.
+
+## To add a new application 
+- Edit the `docker-compose.yml` file in this repo
+- Edit `./data/nginx/app.conf`, and add new service
+
+## To start and stop docker containers
+`docker-compose up`
+
+`docker-compose down`
+
+
+
+## Trouble Shooting
+### When `docker-compose up` fails 
+
+_Error_: similar to "docker.errors.DockerException: Credentials store error"
+
+_Solution_: Edit  `~/.docker/config.json` so that `credStore:` value is empty:
+
+{"auths":{},"credsStore":"","experimental":"disabled","stackOrchestrator":"swarm"}
+
+
+
+# Original README.md from `https://github.com/wmnnd/nginx-certbot`
 # Boilerplate for nginx with Let’s Encrypt on docker-compose
 
 > This repository is accompanied by a [step-by-step guide on how to
