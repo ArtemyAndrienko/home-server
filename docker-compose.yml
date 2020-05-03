@@ -39,10 +39,22 @@ services:
   # Ping server
   # Prerequisite - pngan/ping-server exists on docker hub
   ping-server:
-      image: pngan/ping-server
-      restart: unless-stopped
-      expose:
-        - "8000"
-      networks:
-        - home-server-network
+    image: pngan/ping-server
+    restart: unless-stopped
+    expose:
+      - "8000"
+    networks:
+      - home-server-network
+
+
+  ##############################################################################
+  # Covid19 server
+  # Prerequisite - pngan/covid19-server exists on docker hub
+  covid19-server:
+    image: pngan/covid19-server
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks:
+      - home-server-network
 
