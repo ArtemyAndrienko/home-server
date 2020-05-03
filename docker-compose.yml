@@ -57,4 +57,3 @@ services:
       - "8080"
     networks:
       - home-server-network
-    command: "/bin/sh -c 'while :; do python geoplot.py; sleep 6h & wait $${!}; done;'" # Update graph every 6 hours
