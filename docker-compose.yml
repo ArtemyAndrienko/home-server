@@ -57,3 +57,4 @@ services:
       - "8080"
     networks:
       - home-server-network
+    
