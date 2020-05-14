@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(nganfamily.com)
+domains=(nganfamily.com covid19.nganfamily.com ping.nganfamily.com ngan.familyds.com)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="phillipandkirsten@gmail.com" # Adding a valid address is strongly recommended
