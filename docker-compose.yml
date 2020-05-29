@@ -1,11 +1,12 @@
 version: '3'
 
-
 networks:
   home-server-network:
 
-services:
+volumes:
+  sqldata: 
 
+services:
   ##############################################################################
   # Reverse proxy
   nginx:
@@ -43,7 +44,6 @@ services:
     restart: unless-stopped
     expose:
       - "8000"
-   
     networks:
       - home-server-network
 
@@ -86,4 +86,20 @@ services:
     cap_add:
       - NET_ADMIN
     restart: unless-stopped      
-    
+
+
+  # ##############################################################################
+  # SQL Server
+  sqlserver:
+    container_name: sql1
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: ${SQLPASSWORD}
+      MSSQL_PID: 'Developer'
+    volumes:
+        - 'sqldata:/var/opt/mssql'
+    restart: unless-stopped
+        
