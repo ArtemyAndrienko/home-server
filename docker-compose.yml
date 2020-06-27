@@ -4,7 +4,8 @@ networks:
   home-server-network:
 
 volumes:
-  sqldata: 
+  sqldata:
+  ipmon:
 
 services:
   ##############################################################################
@@ -35,7 +36,6 @@ services:
     networks:
       - home-server-network
     
-    
   ##############################################################################
   # Ping server
   # Prerequisite - pngan/ping-server exists on docker hub
@@ -46,7 +46,6 @@ services:
       - "8000"
     networks:
       - home-server-network
-
 
   ##############################################################################
   # Covid19 server
@@ -87,19 +86,30 @@ services:
       - NET_ADMIN
     restart: unless-stopped      
 
-
   # ##############################################################################
   # SQL Server
   sqlserver:
     container_name: sql1
-    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    image:  mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
     ports:
       - "1433:1433"
-    environment:
-      ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: ${SQLPASSWORD}
-      MSSQL_PID: 'Developer'
+    # uncomment below for first time run
+    #environment:
+      #ACCEPT_EULA: 'Y'
+      #SA_PASSWORD: <This1sWherePasswordGoes>
+      #MSSQL_PID: 'Developer'
     volumes:
         - 'sqldata:/var/opt/mssql'
     restart: unless-stopped
-        
+
+  ##############################################################################
+  # ipmon server
+  # Monitors external ip address and updates DNS A record redirect if changed
+  # Prerequisite - pngan/ipmon exists on docker hub
+  # ipmon:
+  #   image: pngan/ipmon
+  #   restart: unless-stopped
+  #   volumes:
+  #     - 'ipmon:/ipmon'
+  #   command: "dotnet NetCore.Docker.dll"
+  # todo - add a looping time
