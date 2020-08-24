@@ -2,10 +2,12 @@ version: '3'
 
 networks:
   home-server-network:
+  
 
 volumes:
   sqldata:
   ipmon:
+  logdata:
 
 services:
   ##############################################################################
@@ -100,6 +102,22 @@ services:
       #MSSQL_PID: 'Developer'
     volumes:
         - 'sqldata:/var/opt/mssql'
+    restart: unless-stopped
+
+  # ##############################################################################
+  # Seq Server for logging
+  #
+  # Test with Postman query: https://docs.datalust.co/docs/posting-raw-events
+  seqserver:
+    container_name: seq
+    image: datalust/seq:latest
+    ports:
+      - 8020:80
+      - 5341:5341
+    environment:
+      ACCEPT_EULA: Y
+    volumes:
+      - 'logdata:/data'
     restart: unless-stopped
 
   ##############################################################################
