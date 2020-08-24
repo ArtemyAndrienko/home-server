@@ -1,0 +1,7 @@
+### Send test log entry to Seq
+POST http://manuka:5341/api/events/raw?clef HTTP/1.1
+content-type: application/vnd.serilog.clef
+
+{"@t":"2020-08-24T09:38:37.8532799Z","@mt":"Hello, {User}","User":"bob"}
+
+###
