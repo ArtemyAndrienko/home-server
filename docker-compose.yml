@@ -118,16 +118,19 @@ services:
       ACCEPT_EULA: Y
     volumes:
       - 'logdata:/data'
+    networks:
+      - home-server-network
     restart: unless-stopped
 
   ##############################################################################
   # ipmon server
   # Monitors external ip address and updates DNS A record redirect if changed
-  # Prerequisite - pngan/ipmon exists on docker hub
-  # ipmon:
-  #   image: pngan/ipmon
-  #   restart: unless-stopped
-  #   volumes:
-  #     - 'ipmon:/ipmon'
-  #   command: "dotnet NetCore.Docker.dll"
-  # todo - add a looping time
+  ipmon:
+    container_name: ipmon
+    image: pngan/ipmon:5
+    restart: unless-stopped
+    volumes:
+      - 'ipmon:/ipmon'
+    networks:
+      - home-server-network
+    command: "dotnet NetCore.Docker.dll"
