@@ -1,13 +1,16 @@
-version: '3'
+version: '3.7'
 
 networks:
   home-server-network:
-  
 
 volumes:
   sqldata:
   ipmon:
   logdata:
+
+secrets:
+  ovh_data:
+    file: ./ovh_data.txt
 
 services:
   ##############################################################################
@@ -115,7 +118,7 @@ services:
       - 8020:80
       - 5341:5341
     environment:
-      ACCEPT_EULA: Y
+      ACCEPT_EULA: 'Y'
     volumes:
       - 'logdata:/data'
     networks:
@@ -134,3 +137,12 @@ services:
     networks:
       - home-server-network
     command: "dotnet NetCore.Docker.dll"
+
+  ##############################################################################
+  # secrets test
+  secrets_test:
+    container_name: secrets_test
+    image: alpine:latest
+    entrypoint: "cat /run/secrets/ovh_data"
+    secrets:
+      - ovh_data

@@ -2,3 +2,4 @@
 .env
 etc-pihole
 etc-dnsmasq.d
+ovh_data.txt
