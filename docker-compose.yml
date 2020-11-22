@@ -9,8 +9,8 @@ volumes:
   logdata:
 
 secrets:
-  ovh_data:
-    file: ./ovh_data.txt
+  ovh.conf:
+    file: ./ovh.conf
 
 services:
   ##############################################################################
@@ -130,19 +130,21 @@ services:
   # Monitors external ip address and updates DNS A record redirect if changed
   ipmon:
     container_name: ipmon
-    image: pngan/ipmon:5
+    image: pngan/ipmon:latest
     restart: unless-stopped
     volumes:
       - 'ipmon:/ipmon'
     networks:
       - home-server-network
     command: "dotnet NetCore.Docker.dll"
+    secrets:
+      - ovh.conf
 
   ##############################################################################
   # secrets test
   secrets_test:
     container_name: secrets_test
     image: alpine:latest
-    entrypoint: "cat /run/secrets/ovh_data"
+    entrypoint: "cat /run/secrets/ovh.conf"
     secrets:
-      - ovh_data
+      - ovh.conf
