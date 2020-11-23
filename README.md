@@ -8,12 +8,13 @@ The main component is an nginx reverse proxy which passes commands to a number o
 - Edit the `docker-compose.yml` file in this repo
 - Edit `./data/nginx/app.conf`, and add new service
 
-## To start and stop docker containers
+### To start and stop docker containers
 `docker-compose up`
-
 `docker-compose down`
 
-
+### To start and stop docker service
+`docker-compose stop ipmon`
+`docker-compose start ipmon`
 
 ## Trouble Shooting
 ### When `docker-compose up` fails 
