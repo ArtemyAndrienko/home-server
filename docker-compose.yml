@@ -7,6 +7,7 @@ volumes:
   sqldata:
   ipmon:
   logdata:
+  grafana:
 
 secrets:
   ovh.conf:
@@ -40,7 +41,59 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
       - home-server-network
-    
+        
+
+  ##############################################################################
+  # Prometheus docker telemetry
+  grafana:
+    image: grafana/grafana:latest
+    container_name: monitoring_grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    links:
+      - prometheus:prometheus
+    volumes:
+      - 'grafana:/var/lib/grafana'
+    depends_on:
+      - prometheus    
+    networks:
+      - home-server-network
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - cadvisor
+    networks:
+      - home-server-network
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - 8090:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - redis
+    networks:
+      - home-server-network
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - home-server-network
+
   ##############################################################################
   # Ping server
   # Prerequisite - pngan/ping-server exists on docker hub
