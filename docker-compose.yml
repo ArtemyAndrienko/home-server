@@ -99,13 +99,21 @@ services:
 
   ##############################################################################
   # Ping server
-  # Prerequisite - pngan/ping-server exists on docker hub
   ping-server:
     container_name: ping
     image: pngan/ping-server
     restart: unless-stopped
     expose:
       - "8000"
+    networks:
+      - home-server-network
+
+  ##############################################################################
+  # Countdown server
+  countdown-server:
+    container_name: countdown
+    image: pngan/countdowncardgameserver
+    restart: unless-stopped
     networks:
       - home-server-network
 
@@ -121,6 +129,7 @@ services:
     networks:
       - home-server-network
 
+
   # # ##############################################################################
   # # # pihole ad blocking dns server
   # # # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
@@ -132,7 +141,8 @@ services:
   #     - "53:53/udp"
   #     - "67:67/udp"
   #     - "10080:80/tcp"
-  #     - "10443:443/tcp"
+  #   expose:
+  #     - "10080"
   #   environment:
   #     TZ: 'Pacific/Auckland'
   #     WEBPASSWORD: 'ngan'
@@ -141,7 +151,7 @@ services:
   #      - './etc-pihole/:/etc/pihole/'
   #      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
   #   dns:
-  #     - 127.0.0.1
+  #     - 8.8.8.8
   #     - 1.1.1.1
   #   # Recommended but not required (DHCP needs NET_ADMIN)
   #   #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
@@ -149,21 +159,21 @@ services:
   #     - NET_ADMIN
   #   restart: unless-stopped      
 
-  # # ##############################################################################
-  # # SQL Server
-  # sqlserver:
-  #   container_name: sql1
-  #   image:  mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
-  #   ports:
-  #     - "1433:1433"
-  #   # uncomment below for first time run
-  #   #environment:
-  #     #ACCEPT_EULA: 'Y'
-  #     #SA_PASSWORD: <This1sWherePasswordGoes>
-  #     #MSSQL_PID: 'Developer'
-  #   volumes:
-  #       - 'sqldata:/var/opt/mssql'
-  #   restart: unless-stopped
+  # ##############################################################################
+  # SQL Server
+  sqlserver:
+    container_name: sql1
+    image:  mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
+    ports:
+      - "1433:1433"
+    # uncomment below for first time run
+    #environment:
+      #ACCEPT_EULA: 'Y'
+      #SA_PASSWORD: <This1sWherePasswordGoes>
+      #MSSQL_PID: 'Developer'
+    volumes:
+        - 'sqldata:/var/opt/mssql'
+    restart: unless-stopped
 
   # # ##############################################################################
   # # Seq Server for logging
