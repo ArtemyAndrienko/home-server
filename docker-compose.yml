@@ -216,12 +216,3 @@ services:
     entrypoint: "cat /run/secrets/ovh.conf"
     secrets:
       - ovh.conf
-
-
-  ##############################################################################
-  # network-multitool for debugging
-  network-multitool:
-    container_name: network-multitool
-    image: praqma/network-multitool:latest
-    networks:
-      - home-server-network
